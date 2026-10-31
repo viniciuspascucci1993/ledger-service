@@ -1,18 +1,16 @@
 package com.viniciuspascucci.ledger.domain;
 
-import org.jspecify.annotations.Nullable;
-
 import java.util.List;
 
 public class Lancamento {
 
     private final List<Partida> partidas;
 
-    public Lancamento(List<Partida> partidas) {
+    private Lancamento(List<Partida> partidas) {
         this.partidas = List.copyOf(partidas);
     }
 
-    public static @Nullable Object criar(List<Partida> partidas) {
+    public static Lancamento criar(List<Partida> partidas) {
         // ??? 1. menos de 2 partidas → LancamentoDesequilibradoException
         if (partidas.size() < 2) {
             throw new LancamentoDesequilibradoException(
