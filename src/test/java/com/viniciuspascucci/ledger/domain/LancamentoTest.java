@@ -21,6 +21,17 @@ public class LancamentoTest {
     }
 
     @Test
+    @DisplayName("Deveria aceitar lançamento com múltiplas partidas")
+    void deveAceitarLancamentoComMultiplasPartidas() {
+        var debito = Partida.debito(UUID.randomUUID(), 100);
+        var credito = Partida.credito(UUID.randomUUID(), 60);
+        var credito2 = Partida.credito(UUID.randomUUID(), 40);
+
+        assertDoesNotThrow(() -> Lancamento.criar(List.of(debito, credito, credito2)));
+    }
+
+
+    @Test
     @DisplayName("Deveria rejeitar lançamento desequilibrado")
     void deveRejeitarLancamentoDesequilibrado() {
         var debito = Partida.debito(UUID.randomUUID(), 100);
