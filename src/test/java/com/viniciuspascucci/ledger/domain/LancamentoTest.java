@@ -3,11 +3,11 @@ package com.viniciuspascucci.ledger.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LancamentoTest {
 
@@ -74,4 +74,27 @@ public class LancamentoTest {
                 () -> Partida.debito(UUID.randomUUID(), -100));
     }
 
+    @Test
+    @DisplayName("Deveria gerar id e data de criação ao criar lançamento")
+    void deveGerarIdECriadoEmAoCriar() {
+        var debito = Partida.debito(UUID.randomUUID(), 100);
+        var credito = Partida.credito(UUID.randomUUID(), 100);
+
+        var lancamento = Lancamento.criar(List.of(debito, credito));
+
+        assertNotNull(lancamento.getId());
+        assertNotNull(lancamento.getCriadoEm());
+    }
+
+    @Test
+    @DisplayName("Deve reconstruir lançamento que já existe no banco")
+    void deveReconstruirLancamentoExistenteNoBanco() {
+        var debito = Partida.debito(UUID.randomUUID(), 100);
+        var credito = Partida.credito(UUID.randomUUID(), 100);
+
+        var lancamento  = Lancamento.reconstruir(UUID.randomUUID(), Instant.now(), List.of(debito, credito));
+
+        assertNotNull(lancamento.getId());
+        assertNotNull(lancamento.getCriadoEm());
+    }
 }
