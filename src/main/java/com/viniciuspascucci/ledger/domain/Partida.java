@@ -30,8 +30,8 @@ public class Partida {
         return new Partida(UUID.randomUUID(), contaId, TipoPartida.CREDITO, valorEmCentavos);
     }
 
-    public static Partida reconstruir(UUID id, UUID contaId, long valorEmCentavos) {
-        return new Partida(id, contaId, TipoPartida.CREDITO, valorEmCentavos);
+    public static Partida reconstruir(UUID id, UUID contaId, TipoPartida tipoPartida, long valorEmCentavos) {
+        return new Partida(id, contaId, tipoPartida, valorEmCentavos);
     }
 
     public UUID getId() {
