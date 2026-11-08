@@ -39,10 +39,6 @@ public class PartidaEntity {
         return id;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public UUID getLancamentoId() {
         return lancamentoId;
     }
