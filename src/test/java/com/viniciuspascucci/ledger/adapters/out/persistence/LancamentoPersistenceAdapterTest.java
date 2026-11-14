@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Import(TestcontainersConfiguration.class)
-public class LancamentoPersistenceAdapterTest {
+class LancamentoPersistenceAdapterTest {
 
     @Autowired
     private LancamentoRepository lancamentoRepository;

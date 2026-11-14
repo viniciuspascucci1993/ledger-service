@@ -6,7 +6,6 @@ import com.viniciuspascucci.ledger.domain.Partida;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,7 +15,7 @@ class LancamentoPersistenceAdapter implements LancamentoRepository {
     private final LancamentoJpaRepository lancamentoJpaRepository;
     private final PartidaJpaRepository partidaJpaRepository;
 
-    public LancamentoPersistenceAdapter(LancamentoJpaRepository lancamentoJpaRepository,
+    LancamentoPersistenceAdapter(LancamentoJpaRepository lancamentoJpaRepository,
                                         PartidaJpaRepository partidaJpaRepository) {
         this.lancamentoJpaRepository = lancamentoJpaRepository;
         this.partidaJpaRepository = partidaJpaRepository;
