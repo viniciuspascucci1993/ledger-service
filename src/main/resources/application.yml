@@ -6,5 +6,6 @@ spring:
     username: ledger
     password: ledger
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: validate
