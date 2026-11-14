@@ -1,6 +1,7 @@
 package com.viniciuspascucci.ledger.domain;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,7 +39,7 @@ public class Lancamento {
         }
 
 
-        return new Lancamento(UUID.randomUUID(), Instant.now(), partidas);
+        return new Lancamento(UUID.randomUUID(), Instant.now().truncatedTo(ChronoUnit.MICROS), partidas);
     }
 
     // Recria um lançamento que JÁ EXISTE no banco
