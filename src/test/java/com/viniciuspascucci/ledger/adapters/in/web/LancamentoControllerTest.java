@@ -18,7 +18,7 @@ import java.util.UUID;
 
 import static org.hamcrest.Matchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -81,5 +81,19 @@ public class LancamentoControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(corpoValido))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Valor negativo deveria retornar 400 sem chamar o caso de uso")
+    void deveRetornar400QuandoValorNegativo() throws Exception {
+        String corpoNegativo = CORPO_VALIDO.replaceFirst("5000", "-100");
+
+        mockMvc.perform(post("/v1/lancamentos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(corpoNegativo))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON));
+
+        verify(criarLancamentoUseCase, never()).criar(any());
     }
 }

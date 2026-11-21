@@ -5,6 +5,7 @@ import com.viniciuspascucci.ledger.adapters.in.web.response.LancamentoResponse;
 import com.viniciuspascucci.ledger.application.port.in.CriarLancamentoCommand;
 import com.viniciuspascucci.ledger.application.port.in.CriarLancamentoUseCase;
 import com.viniciuspascucci.ledger.domain.Lancamento;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ public class LancamentoController {
     }
 
     @PostMapping
-    ResponseEntity<LancamentoResponse> criar(@RequestBody CriarLancamentoRequest request) {
+    ResponseEntity<LancamentoResponse> criar(@Valid @RequestBody CriarLancamentoRequest request) {
         // 1. request.toCommand() → chamar o use case
         Lancamento lancamento = criarLancamentoUseCase.criar(request.toComand());
 

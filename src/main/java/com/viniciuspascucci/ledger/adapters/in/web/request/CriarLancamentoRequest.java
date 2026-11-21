@@ -2,10 +2,12 @@ package com.viniciuspascucci.ledger.adapters.in.web.request;
 
 import com.viniciuspascucci.ledger.application.port.in.CriarLancamentoCommand;
 import com.viniciuspascucci.ledger.application.port.in.PartidaCommand;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
-public record CriarLancamentoRequest(List<PartidaRequest> partidas) {
+public record CriarLancamentoRequest(@NotEmpty List<@Valid PartidaRequest> partidas) {
 
     public CriarLancamentoCommand toComand() {
         return new CriarLancamentoCommand(
