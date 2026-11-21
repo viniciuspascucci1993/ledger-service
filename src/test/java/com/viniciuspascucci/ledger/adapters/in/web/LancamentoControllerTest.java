@@ -1,5 +1,6 @@
 package com.viniciuspascucci.ledger.adapters.in.web;
 
+import com.viniciuspascucci.ledger.application.port.in.BuscarLancamentoUseCase;
 import com.viniciuspascucci.ledger.application.port.in.CriarLancamentoCommand;
 import com.viniciuspascucci.ledger.application.port.in.CriarLancamentoUseCase;
 import com.viniciuspascucci.ledger.domain.Lancamento;
@@ -14,11 +15,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -30,6 +33,9 @@ public class LancamentoControllerTest {
 
     @MockitoBean
     private CriarLancamentoUseCase criarLancamentoUseCase;
+
+    @MockitoBean
+    private BuscarLancamentoUseCase buscarLancamentoUseCase;
 
     private static final String CORPO_VALIDO = """
             {
@@ -95,5 +101,30 @@ public class LancamentoControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON));
 
         verify(criarLancamentoUseCase, never()).criar(any());
+    }
+
+    @Test
+    @DisplayName("GET de lançamento existente deveria retornar 200 com o lançamento")
+    void deveRetornar200QuandoLancamentoExiste() throws Exception {
+        var lancamento = Lancamento.criar(List.of(
+                Partida.debito(UUID.randomUUID(), 5000),
+                Partida.credito(UUID.randomUUID(), 5000)));
+
+        when(buscarLancamentoUseCase.buscarPorId(lancamento.getId())).thenReturn(Optional.of(lancamento));
+        mockMvc.perform(get("/v1/lancamentos/{id}", lancamento.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(lancamento.getId().toString()))
+                .andExpect(jsonPath("$.partidas.length()").value(2));
+    }
+
+    @Test
+    @DisplayName("GET de lançamento inexistente deveria retornar 404 com ProblemDetail")
+    void deveRetornar404QuandoLancamentoNaoExiste() throws Exception {
+        UUID idInexistente = UUID.randomUUID();
+        when(buscarLancamentoUseCase.buscarPorId(idInexistente)).thenReturn(Optional.empty());
+        mockMvc.perform(get("/v1/lancamentos/{id}", idInexistente))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.title").value("Lançamento não encontrado"));
     }
 }
